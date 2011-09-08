@@ -2,13 +2,13 @@
  * Copyright (C) 2009-2010 the original author or authors.
  * See the notice.md file distributed with this work for additional
  * information regarding copyright ownership.
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,6 +25,7 @@ import java.util.logging.Logger;
 import org.fusesource.restygwt.client.Defaults;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.cache.CacheKey;
+import org.fusesource.restygwt.client.cache.CacheLifetime;
 import org.fusesource.restygwt.client.cache.Domain;
 import org.fusesource.restygwt.client.cache.ScopableQueueableCacheStorage;
 import org.fusesource.restygwt.client.cache.UrlCacheKey;
@@ -53,7 +54,7 @@ public class CachingCallbackFilter implements CallbackFilter {
 
     /**
      * the real filter method, called independent of the response code
-     *
+     * 
      * TODO method.getResponse() is not equal to response. unfortunately
      */
     @Override
@@ -62,8 +63,7 @@ public class CachingCallbackFilter implements CallbackFilter {
         final CacheKey ck = new UrlCacheKey(method.builder);
         final List<RequestCallback> removedCallbacks = cache.removeCallbacks(ck);
 
-        if (removedCallbacks != null
-                && 1 < removedCallbacks.size()) {
+        if (removedCallbacks != null && 1 < removedCallbacks.size()) {
             // remove the first callback from list, as this is called explicitly
             removedCallbacks.remove(0);
             // fetch the builders callback and wrap it with a new one, calling all others too
@@ -74,15 +74,15 @@ public class CachingCallbackFilter implements CallbackFilter {
                 public void onResponseReceived(Request request, Response response) {
                     // call the original callback
                     if (Defaults.canLog()) {
-                        Logger.getLogger(CachingCallbackFilter.class.getName())
-                                .finer("call original callback for " + ck);
+                        Logger.getLogger(CachingCallbackFilter.class.getName()).finer(
+                                "call original callback for " + ck);
                     }
                     originalCallback.onResponseReceived(request, response);
 
                     if (Defaults.canLog()) {
-                        Logger.getLogger(CachingCallbackFilter.class.getName())
-                                .finer("call "+ removedCallbacks.size()
-                                        + " more queued callbacks for " + ck);
+                        Logger.getLogger(CachingCallbackFilter.class.getName()).finer(
+                                "call " + removedCallbacks.size() + " more queued callbacks for "
+                                        + ck);
                     }
 
                     // and all the others, found in cache
@@ -94,23 +94,22 @@ public class CachingCallbackFilter implements CallbackFilter {
                 @Override
                 public void onError(Request request, Throwable exception) {
                     if (Defaults.canLog()) {
-                        Logger.getLogger(CachingCallbackFilter.class.getName())
-                                .severe("cannot call " + (removedCallbacks.size()+1)
-                                        + " callbacks for " + ck + " due to error: "
-                                        + exception.getMessage());
+                        Logger.getLogger(CachingCallbackFilter.class.getName()).severe(
+                                "cannot call " + (removedCallbacks.size() + 1) + " callbacks for "
+                                        + ck + " due to error: " + exception.getMessage());
                     }
                     // call the original callback
                     if (Defaults.canLog()) {
-                        Logger.getLogger(CachingCallbackFilter.class.getName())
-                                .finer("call original callback for " + ck);
+                        Logger.getLogger(CachingCallbackFilter.class.getName()).finer(
+                                "call original callback for " + ck);
                     }
 
                     originalCallback.onError(request, exception);
 
                     if (Defaults.canLog()) {
-                        Logger.getLogger(CachingCallbackFilter.class.getName())
-                                .finer("call "+ removedCallbacks.size()
-                                        + " more queued callbacks for " + ck);
+                        Logger.getLogger(CachingCallbackFilter.class.getName()).finer(
+                                "call " + removedCallbacks.size() + " more queued callbacks for "
+                                        + ck);
                     }
 
                     // and all the others, found in cache
@@ -121,12 +120,41 @@ public class CachingCallbackFilter implements CallbackFilter {
             };
         } else {
             if (Defaults.canLog()) {
-                Logger.getLogger(CachingCallbackFilter.class.getName()).finer("removed one or no " +
-                        "callback for cachekey " + ck);
+                Logger.getLogger(CachingCallbackFilter.class.getName()).finer(
+                        "removed one or no " + "callback for cachekey " + ck);
             }
         }
 
-        cache.putResult(ck, response, getCacheDomains(method));
+        // check for a predefined caching lifetime
+        Integer definedTimeout = null;
+
+        try {
+            final String rawString = method.getData().get(CacheLifetime.CACHE_LIFETIME_KEY);
+
+            if (null != rawString) {
+                JSONValue json = JSONParser.parseStrict(rawString);
+                JSONArray jsonArray = json.isArray();
+
+                if (null != jsonArray) {
+                    definedTimeout = Integer.parseInt(jsonArray.get(0).isString().stringValue());
+                }
+            }
+        } catch (NumberFormatException ignored) {
+        }
+
+        if (null != definedTimeout) {
+            if (0 < definedTimeout) {
+                cache.putResult(ck, response, definedTimeout, getCacheDomains(method));
+            } else {
+                if (Defaults.canLog()) {
+                    Logger.getLogger(CachingCallbackFilter.class.getName()).fine(
+                            "configured caching timeout of: " + definedTimeout
+                                    + " - will ignore caching");
+                }
+            }
+        } else {
+            cache.putResult(ck, response, getCacheDomains(method));
+        }
         return callback;
     }
 
@@ -134,15 +162,17 @@ public class CachingCallbackFilter implements CallbackFilter {
      * when using the {@link Domain} annotation on services, we are able to group responses
      * of a service to invalitate them later on more fine grained. this method resolves a
      * possible ``domain`` to allow grouping.
-     *
+     * 
      * @return
      */
     private String[] getCacheDomains(final Method method) {
-        if (null == method.getData().get(Domain.CACHE_DOMAIN_KEY)) return null;
+        if (null == method.getData().get(Domain.CACHE_DOMAIN_KEY))
+            return null;
 
-        final JSONValue jsonValue = JSONParser.parseStrict(method.getData()
-                .get(Domain.CACHE_DOMAIN_KEY));
-        if (null == jsonValue) return null;
+        final JSONValue jsonValue =
+                JSONParser.parseStrict(method.getData().get(Domain.CACHE_DOMAIN_KEY));
+        if (null == jsonValue)
+            return null;
 
         JSONArray jsonArray = jsonValue.isArray();
         final List<String> dd = new ArrayList<String>();

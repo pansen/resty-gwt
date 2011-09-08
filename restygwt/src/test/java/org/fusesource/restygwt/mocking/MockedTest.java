@@ -13,11 +13,11 @@ import com.google.gwt.junit.GWTMockUtilities;
 /**
  * Just a real world usability example how services can be mocked in a simple
  * manner. WITHOUT using GwtTestCases that tend to be damn slow.
- *
+ * 
  * In principle - you just have to implement the interface - right?
- *
+ * 
  * @author <a href="mailto:mail@raphaelbauer.com">rEyez</<a>
- *
+ * 
  */
 public class MockedTest extends TestCase {
 
@@ -43,6 +43,13 @@ public class MockedTest extends TestCase {
                 exampleDto.name = "name";
                 callback.onSuccess(null, exampleDto);
 
+            }
+
+            @Override
+            public void getWithCachingTimeouConfigured(MethodCallback<ExampleDto> callback) {
+                ExampleDto exampleDto = new ExampleDto();
+                exampleDto.name = "name";
+                callback.onSuccess(null, exampleDto);
             }
         };
 

@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2010 the original author or authors.
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,6 +16,7 @@
 
 package org.fusesource.restygwt.client.basic;
 
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.fusesource.restygwt.client.Defaults;
@@ -23,6 +24,7 @@ import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.Resource;
 import org.fusesource.restygwt.client.RestServiceProxy;
+import org.fusesource.restygwt.client.cache.CacheKey;
 import org.fusesource.restygwt.client.cache.QueuableRuntimeCacheStorage;
 import org.fusesource.restygwt.client.cache.ScopableQueueableCacheStorage;
 import org.fusesource.restygwt.client.cache.UrlCacheKey;
@@ -47,47 +49,60 @@ import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.Timer;
 
 /**
- * @author <a href="mailto:mail@raphaelbauer.com">rEyez</<a>
+ * @author rEyez, abalke
  */
 public class CachingTestGwt extends GWTTestCase {
 
     public int timesAskedServer = 0;
+
+    /**
+     * the timer that looks at the server for a count
+     */
+    private Timer timerCheck;
 
     @Override
     public String getModuleName() {
         return "org.fusesource.restygwt.CachingTestGwt";
     }
 
+    @Override
+    protected void gwtTearDown() throws Exception {
+        super.gwtTearDown();
+
+        // stop all other checking timers
+        if (timerCheck != null) {
+            timerCheck.cancel();
+        }
+    }
+
     /**
      * We are inside HtmlUni - therefore it's a bit more wired...
-     *
+     * 
      * Main simple idea:
-     *
+     * 
      * There is one regular JSON request against the server scheduled each 2000 ms.
-     *
+     * 
      * Another "Check" request is also scheduled at 2000ms. This "Check" request
      * checks if the real server was contacted only one time and fires doFinish() when
      * everything is okay...
-     *
+     * 
      */
     public void testIfCachingWorks() {
-        //configure RESTY to use cache:
+        // configure RESTY to use cache:
         final EventBus eventBus = new SimpleEventBus();
         final ScopableQueueableCacheStorage cacheStorage = new QueuableRuntimeCacheStorage();
         final FilterawareDispatcher dispatcher = new FilterawareRetryingDispatcher();
 
-        dispatcher.addFilter(new CachingDispatcherFilter(
-                cacheStorage,
-                new CallbackFactory() {
-                    public FilterawareRequestCallback createCallback(Method method) {
-                        final FilterawareRequestCallback retryingCallback = new FilterawareRetryingCallback(
-                                method);
+        dispatcher.addFilter(new CachingDispatcherFilter(cacheStorage, new CallbackFactory() {
+            public FilterawareRequestCallback createCallback(Method method) {
+                final FilterawareRequestCallback retryingCallback =
+                        new FilterawareRetryingCallback(method);
 
-                        retryingCallback.addFilter(new CachingCallbackFilter(cacheStorage));
-                        retryingCallback.addFilter(new ModelChangeCallbackFilter(eventBus));
-                        return retryingCallback;
-                    }
-                }));
+                retryingCallback.addFilter(new CachingCallbackFilter(cacheStorage));
+                retryingCallback.addFilter(new ModelChangeCallbackFilter(eventBus));
+                return retryingCallback;
+            }
+        }));
 
         Defaults.setDispatcher(dispatcher);
 
@@ -117,21 +132,20 @@ public class CachingTestGwt extends GWTTestCase {
 
         timer.scheduleRepeating(2000);
 
-        //the checking task => for convenience in separate method...
+        // the checking task => for convenience in separate method...
         checkIfServerIsRequestsAreCached();
 
-        //wait 10 secs for the test to call doFinish() => otherwise it fails..
+        // wait 10 secs for the test to call doFinish() => otherwise it fails..
         delayTestFinish(10000);
     }
 
-
-
     public void checkIfServerIsRequestsAreCached() {
-        Timer timerCheck = new Timer() {
+        timerCheck = new Timer() {
             @Override
             public void run() {
-                final RequestBuilder ajax = new RequestBuilder(
-                        RequestBuilder.GET, GWT.getModuleBaseURL() + "api/getnumberofcontacts");
+                final RequestBuilder ajax =
+                        new RequestBuilder(RequestBuilder.GET, GWT.getModuleBaseURL()
+                                + "api/getnumberofcontacts");
 
                 try {
                     ajax.sendRequest("", new RequestCallback() {
@@ -139,8 +153,7 @@ public class CachingTestGwt extends GWTTestCase {
 
                         }
 
-                        public void onResponseReceived(Request request,
-                                Response response) {
+                        public void onResponseReceived(Request request, Response response) {
                             String text = response.getText();
 
                             if (!text.equals("1")) {
@@ -213,5 +226,78 @@ public class CachingTestGwt extends GWTTestCase {
 
         });
 
+    }
+
+    /**
+     * check if ``CacheLifetime`` annotation works as expected
+     */
+    public void testCacheLifetimeWorks() {
+        // configure RESTY to use cache:
+        final EventBus eventBus = new SimpleEventBus();
+        final QueuableRuntimeCacheStorageTesting cacheStorage =
+                new QueuableRuntimeCacheStorageTesting();
+        final FilterawareDispatcher dispatcher = new FilterawareRetryingDispatcher();
+
+        dispatcher.addFilter(new CachingDispatcherFilter(cacheStorage, new CallbackFactory() {
+            public FilterawareRequestCallback createCallback(Method method) {
+                final FilterawareRequestCallback retryingCallback =
+                        new FilterawareRetryingCallback(method);
+
+                retryingCallback.addFilter(new CachingCallbackFilter(cacheStorage));
+                retryingCallback.addFilter(new ModelChangeCallbackFilter(eventBus));
+                return retryingCallback;
+            }
+        }));
+
+        Defaults.setDispatcher(dispatcher);
+
+        Resource resource = new Resource(GWT.getModuleBaseURL() + "api/getendpoint");
+        final ExampleService service = GWT.create(ExampleService.class);
+        ((RestServiceProxy) service).setResource(resource);
+
+        // before testing, there should be no value in cache
+        assertEquals(0, cacheStorage.getScope(ExampleDto.class.getName()).size());
+
+        // perform a simple request without cache filled
+        service.getWithCachingTimeouConfigured(new MethodCallback<ExampleDto>() {
+            @Override
+            public void onSuccess(Method method, ExampleDto response) {
+                GWT.log("... 1st call (uncached) success");
+
+                // check the cache does have a value after successful request
+                // assertEquals(1, cacheStorage.getScope(ExampleDto.class.getName()).size());
+
+                Timer doWhenCacheIsTimedOut = new Timer() {
+                    @Override
+                    public void run() {
+                        // now as the cache timed out, there should not be
+                        // any cache
+                        // value for our scope
+                        assertEquals(0, cacheStorage.getScope(ExampleDto.class.getName()).size());
+                        finishTest();
+                    }
+                };
+                doWhenCacheIsTimedOut.schedule(2000);
+            }
+
+            @Override
+            public void onFailure(Method method, Throwable exception) {
+                fail("got to failure method - unexpected");
+            }
+        });
+
+        // wait 10 secs for the test to call doFinish() => otherwise it fails..
+        delayTestFinish(6000);
+    }
+
+    private class QueuableRuntimeCacheStorageTesting extends QueuableRuntimeCacheStorage {
+        /**
+         * just an override to access the cache in testing mode
+         */
+        @Override
+        public List<CacheKey> getScope(final String scope) {
+            return super.getScope(scope);
+
+        }
     }
 }

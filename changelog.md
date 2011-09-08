@@ -3,6 +3,7 @@ RestyGWT
 
 [resty-gwt 1.1 Events]
 ---------------
+* implement ``@CacheLifetime`` annotation wich is processed by ``CachingCallbackFilter``
 * always use onResponseReceived in FilterawareRetryingCallback, even in 
   error cases which always prefills the method with the response object 
   for later callback handling

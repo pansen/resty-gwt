@@ -43,6 +43,8 @@
         </none>
     </replace-with>
 
-    <set-configuration-property name="org.fusesource.restygwt.annotationresolver"
+    <extend-configuration-property name="org.fusesource.restygwt.annotationresolver"
             value="org.fusesource.restygwt.rebind.ModelChangeAnnotationResolver"/>
+    <extend-configuration-property name="org.fusesource.restygwt.annotationresolver"
+            value="org.fusesource.restygwt.rebind.CacheTimeoutAnnotationResolver"/>
 </module>

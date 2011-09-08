@@ -9,7 +9,7 @@ Update Version In Bash
 
 ::
 
-    grep -lr SNAPSHOT .|grep -v .git|while read f; do echo "$f"; sed -i "" 's/1\.2-SEC\.12-SNAPSHOT/1.2-SEC.13-SNAPSHOT/g' "$f"; done
+    grep -lr SNAPSHOT .|grep -v .git|while read f; do echo "$f"; sed -i "" 's/1\.2-SEC\.12-SNAPSHOT/1.2-SEC.15-SNAPSHOT/g' "$f"; done
 
 
 check::
