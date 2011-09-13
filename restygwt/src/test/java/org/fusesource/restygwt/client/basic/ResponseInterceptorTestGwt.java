@@ -28,15 +28,12 @@ import org.fusesource.restygwt.client.callback.CachingCallbackFilter;
 import org.fusesource.restygwt.client.callback.CallbackFactory;
 import org.fusesource.restygwt.client.callback.FilterawareRequestCallback;
 import org.fusesource.restygwt.client.callback.FilterawareRetryingCallback;
-import org.fusesource.restygwt.client.callback.ModelChangeCallbackFilter;
 import org.fusesource.restygwt.client.dispatcher.CachingDispatcherFilter;
 import org.fusesource.restygwt.client.dispatcher.FilterawareDispatcher;
 import org.fusesource.restygwt.client.dispatcher.FilterawareRetryingDispatcher;
 import org.fusesource.restygwt.client.intercept.TestingInterceptorCallback;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.shared.EventBus;
-import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.junit.client.GWTTestCase;
 
 /**
@@ -59,7 +56,7 @@ public class ResponseInterceptorTestGwt extends GWTTestCase {
      */
     public void testGetAndIntercept() {
         // defines our response dto via echoservlet
-        final String JSON_RESPONSE = "{\"name:\"foo\", \"id\":\"U:ui\"}";
+        final String JSON_RESPONSE = "{\"name\":\"foo\", \"id\":\"U:ui\"}";
 
         // before the test, there is nothing
         String lastInput =
@@ -100,7 +97,6 @@ public class ResponseInterceptorTestGwt extends GWTTestCase {
         /*
          * configure RESTY to use cache, usually done in gin
          */
-        final EventBus eventBus = new SimpleEventBus();
         final ScopableQueueableCacheStorage cacheStorage = new QueuableRuntimeCacheStorage();
         final FilterawareDispatcher dispatcher = new FilterawareRetryingDispatcher();
 
@@ -109,8 +105,6 @@ public class ResponseInterceptorTestGwt extends GWTTestCase {
                 final FilterawareRequestCallback retryingCallback =
                         new FilterawareRetryingCallback(method);
 
-                retryingCallback.addFilter(new CachingCallbackFilter(cacheStorage));
-                retryingCallback.addFilter(new ModelChangeCallbackFilter(eventBus));
                 return retryingCallback;
             }
         }));
