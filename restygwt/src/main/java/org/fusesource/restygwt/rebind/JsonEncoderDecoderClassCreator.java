@@ -299,8 +299,8 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                     && 0 < classAnnotation.value().length) {
                 for (Class<? extends InterceptorCallback> callbackClazz : classAnnotation.value()) {
                     // apply the incoming ``value`` straight to an interceptor
-                    p(callbackClazz.getName() + ".INSTANCE.intercept(value, Class<"
-                            + getClassParameterizedQualifiedSourceName(source) + "> expectedType);");
+                    p(callbackClazz.getName() + ".INSTANCE.intercept(value, "
+                            + getClassParameterizedQualifiedSourceName(source) + ".class);");
                 }
             }
 

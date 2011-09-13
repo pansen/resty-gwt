@@ -63,6 +63,8 @@ public class ResponseInterceptorTestGwt extends GWTTestCase {
                 ((TestingInterceptorCallback) TestingInterceptorCallback.INSTANCE).getLastInput();
         Class<ResponseInterceptedDto> lastType =
                 ((TestingInterceptorCallback) TestingInterceptorCallback.INSTANCE).getLastType();
+        assertEquals(null, lastInput);
+        assertEquals(null, lastType);
 
         service.get(JSON_RESPONSE, "U:ui", new MethodCallback<ResponseInterceptedDto>() {
 
@@ -77,6 +79,8 @@ public class ResponseInterceptorTestGwt extends GWTTestCase {
                                 .getLastType();
 
                 assertEquals(JSON_RESPONSE, lastInput);
+                assertEquals(ResponseInterceptedDto.class, lastType);
+                finishTest();
             }
 
             @Override

@@ -1,5 +1,7 @@
 package org.fusesource.restygwt.client.intercept;
 
+import com.google.gwt.json.client.JSONValue;
+
 public interface InterceptorCallback<T> {
     /**
      * the one and only interception method.
@@ -10,5 +12,5 @@ public interface InterceptorCallback<T> {
      * @param expectedType class type for the final response
      * @return
      */
-    void intercept(final String input, Class<T> expectedType);
+    void intercept(final JSONValue input, Class<T> expectedType);
 }

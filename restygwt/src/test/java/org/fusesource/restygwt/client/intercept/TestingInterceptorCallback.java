@@ -2,6 +2,8 @@ package org.fusesource.restygwt.client.intercept;
 
 import org.fusesource.restygwt.client.basic.ResponseInterceptedDto;
 
+import com.google.gwt.json.client.JSONValue;
+
 public class TestingInterceptorCallback implements InterceptorCallback<ResponseInterceptedDto> {
 
     public static final InterceptorCallback<ResponseInterceptedDto> INSTANCE =
@@ -18,8 +20,9 @@ public class TestingInterceptorCallback implements InterceptorCallback<ResponseI
     private Class<ResponseInterceptedDto> lastType;
 
     @Override
-    public void intercept(String input, Class<ResponseInterceptedDto> expectedType) {
-
+    public void intercept(JSONValue input, Class<ResponseInterceptedDto> expectedType) {
+        lastInput = input.toString();
+        lastType = expectedType;
     }
 
     public String getLastInput() {
