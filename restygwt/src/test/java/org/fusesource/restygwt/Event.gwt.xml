@@ -45,10 +45,11 @@
         </none>
     </replace-with>
 
-    <set-configuration-property name="org.fusesource.restygwt.annotationresolver"
+    <extend-configuration-property name="org.fusesource.restygwt.annotationresolver"
             value="org.fusesource.restygwt.rebind.ModelChangeAnnotationResolver"/>
 
     <servlet path='/foo/*' class='org.fusesource.restygwt.server.event.EchoServlet' />
+    <servlet path='/responseInterceptorDto/*' class='org.fusesource.restygwt.server.event.EchoServlet' />
 
     <source path='client'/>
     <source path='example/client'/>

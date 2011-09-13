@@ -28,6 +28,8 @@ import org.codehaus.jackson.annotate.JsonTypeInfo.Id;
 import org.codehaus.jackson.annotate.JsonTypeName;
 import org.fusesource.restygwt.client.Json;
 import org.fusesource.restygwt.client.Json.Style;
+import org.fusesource.restygwt.client.intercept.InterceptorCallback;
+import org.fusesource.restygwt.client.intercept.ResponseInterceptor;
 
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
@@ -291,6 +293,17 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         p();
         p("public " + source.getName() + " decode(" + JSON_VALUE_CLASS + " value) {").i(1);
         {
+            ResponseInterceptor classAnnotation = source.getAnnotation(ResponseInterceptor.class);
+
+            if (null != classAnnotation && null != classAnnotation.value()
+                    && 0 < classAnnotation.value().length) {
+                for (Class<? extends InterceptorCallback> callbackClazz : classAnnotation.value()) {
+                    // apply the incoming ``value`` straight to an interceptor
+                    p(callbackClazz.getName() + ".INSTANCE.intercept(value, Class<"
+                            + getClassParameterizedQualifiedSourceName(source) + "> expectedType);");
+                }
+            }
+
             p(JSON_OBJECT_CLASS + " object = toObject(value);");
 
             JsonTypeInfo sourceTypeInfo = source.getAnnotation(JsonTypeInfo.class);
