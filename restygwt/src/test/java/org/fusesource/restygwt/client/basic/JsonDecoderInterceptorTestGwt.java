@@ -31,7 +31,9 @@ import org.fusesource.restygwt.client.callback.FilterawareRetryingCallback;
 import org.fusesource.restygwt.client.dispatcher.CachingDispatcherFilter;
 import org.fusesource.restygwt.client.dispatcher.FilterawareDispatcher;
 import org.fusesource.restygwt.client.dispatcher.FilterawareRetryingDispatcher;
-import org.fusesource.restygwt.client.intercept.TestingInterceptorCallback;
+import org.fusesource.restygwt.client.intercept.ResponseInterceptedDto;
+import org.fusesource.restygwt.client.intercept.ServiceWithResponseInterceptorDto;
+import org.fusesource.restygwt.client.intercept.JsonDecoderInterceptorTestCallback;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.junit.client.GWTTestCase;
@@ -42,7 +44,7 @@ import com.google.gwt.junit.client.GWTTestCase;
  * 
  * @author <a href="mailto:andi.balke@gmail.com">andi</a>
  */
-public class ResponseInterceptorTestGwt extends GWTTestCase {
+public class JsonDecoderInterceptorTestGwt extends GWTTestCase {
 
     private ServiceWithResponseInterceptorDto service;
 
@@ -60,9 +62,9 @@ public class ResponseInterceptorTestGwt extends GWTTestCase {
 
         // before the test, there is nothing
         String lastInput =
-                ((TestingInterceptorCallback) TestingInterceptorCallback.INSTANCE).getLastInput();
+                ((JsonDecoderInterceptorTestCallback) JsonDecoderInterceptorTestCallback.INSTANCE).getLastInput();
         Class<ResponseInterceptedDto> lastType =
-                ((TestingInterceptorCallback) TestingInterceptorCallback.INSTANCE).getLastType();
+                ((JsonDecoderInterceptorTestCallback) JsonDecoderInterceptorTestCallback.INSTANCE).getLastType();
         assertEquals(null, lastInput);
         assertEquals(null, lastType);
 
@@ -72,10 +74,10 @@ public class ResponseInterceptorTestGwt extends GWTTestCase {
             public void onSuccess(Method method, ResponseInterceptedDto response) {
                 // when the first interaction was done, we need to have valid input here
                 String lastInput =
-                        ((TestingInterceptorCallback) TestingInterceptorCallback.INSTANCE)
+                        ((JsonDecoderInterceptorTestCallback) JsonDecoderInterceptorTestCallback.INSTANCE)
                                 .getLastInput();
                 Class<ResponseInterceptedDto> lastType =
-                        ((TestingInterceptorCallback) TestingInterceptorCallback.INSTANCE)
+                        ((JsonDecoderInterceptorTestCallback) JsonDecoderInterceptorTestCallback.INSTANCE)
                                 .getLastType();
 
                 assertEquals(JSON_RESPONSE, lastInput);

@@ -32,7 +32,7 @@ import java.lang.annotation.Target;
 @Documented
 @Retention(RUNTIME)
 @Target({java.lang.annotation.ElementType.TYPE})
-public @interface ResponseInterceptor {
+public @interface JsonDecoderInterceptor {
 
-    Class<? extends InterceptorCallback>[] value();
+    Class<? extends JsonDecoderInterceptorCallback>[] value();
 }

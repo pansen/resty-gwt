@@ -2,7 +2,7 @@ package org.fusesource.restygwt.client.intercept;
 
 import com.google.gwt.json.client.JSONValue;
 
-public interface InterceptorCallback<T> {
+public interface JsonDecoderInterceptorCallback<T> {
     /**
      * the one and only interception method.
      * 

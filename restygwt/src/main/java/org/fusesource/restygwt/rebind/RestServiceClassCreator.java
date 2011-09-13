@@ -62,6 +62,7 @@ import org.fusesource.restygwt.client.ResponseFormatException;
 import org.fusesource.restygwt.client.RestServiceProxy;
 import org.fusesource.restygwt.client.TextCallback;
 import org.fusesource.restygwt.client.XmlCallback;
+import org.fusesource.restygwt.client.intercept.JsonDecoderInterceptor;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
@@ -764,5 +765,21 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         }
 
         return l;
+    }
+
+    /**
+     * resolve {@link JsonDecoderInterceptor} annotations and write appropriate handler code
+     * 
+     * @return the generated code
+     */
+    private String writeRequestInterception(JMethod method) {
+        StringBuilder sb = new StringBuilder();
+        JsonDecoderInterceptor methodAnnot = method.getAnnotation(JsonDecoderInterceptor.class);
+
+        if (null != methodAnnot && null != methodAnnot.value() && 0 < methodAnnot.value().length) {
+            // p("__method.getResponse().getText();");
+        }
+
+        return sb.toString();
     }
 }

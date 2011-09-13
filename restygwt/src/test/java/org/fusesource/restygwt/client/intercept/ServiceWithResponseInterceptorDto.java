@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.fusesource.restygwt.client.basic;
+package org.fusesource.restygwt.client.intercept;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;

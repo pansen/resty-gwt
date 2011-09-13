@@ -1,13 +1,12 @@
 package org.fusesource.restygwt.client.intercept;
 
-import org.fusesource.restygwt.client.basic.ResponseInterceptedDto;
 
 import com.google.gwt.json.client.JSONValue;
 
-public class TestingInterceptorCallback implements InterceptorCallback<ResponseInterceptedDto> {
+public class JsonDecoderInterceptorTestCallback implements JsonDecoderInterceptorCallback<ResponseInterceptedDto> {
 
-    public static final InterceptorCallback<ResponseInterceptedDto> INSTANCE =
-            new TestingInterceptorCallback();
+    public static final JsonDecoderInterceptorCallback<ResponseInterceptedDto> INSTANCE =
+            new JsonDecoderInterceptorTestCallback();
 
     /**
      * property for testing purpose
