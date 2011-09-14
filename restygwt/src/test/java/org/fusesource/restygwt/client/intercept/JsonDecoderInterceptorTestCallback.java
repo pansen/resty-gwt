@@ -1,9 +1,9 @@
 package org.fusesource.restygwt.client.intercept;
 
-
 import com.google.gwt.json.client.JSONValue;
 
-public class JsonDecoderInterceptorTestCallback implements JsonDecoderInterceptorCallback<ResponseInterceptedDto> {
+public class JsonDecoderInterceptorTestCallback implements
+        JsonDecoderInterceptorCallback<ResponseInterceptedDto> {
 
     public static final JsonDecoderInterceptorCallback<ResponseInterceptedDto> INSTANCE =
             new JsonDecoderInterceptorTestCallback();
@@ -11,7 +11,7 @@ public class JsonDecoderInterceptorTestCallback implements JsonDecoderIntercepto
     /**
      * property for testing purpose
      */
-    private String lastInput;
+    private JSONValue lastInput;
 
     /**
      * property for testing purpose
@@ -19,12 +19,12 @@ public class JsonDecoderInterceptorTestCallback implements JsonDecoderIntercepto
     private Class<ResponseInterceptedDto> lastType;
 
     @Override
-    public void intercept(JSONValue input, Class<ResponseInterceptedDto> expectedType) {
-        lastInput = input.toString();
+    public void intercept(final JSONValue input, Class<ResponseInterceptedDto> expectedType) {
+        lastInput = input;
         lastType = expectedType;
     }
 
-    public String getLastInput() {
+    public JSONValue getLastInput() {
         return lastInput;
     }
 

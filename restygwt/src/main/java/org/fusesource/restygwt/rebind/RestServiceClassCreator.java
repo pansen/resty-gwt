@@ -63,6 +63,8 @@ import org.fusesource.restygwt.client.RestServiceProxy;
 import org.fusesource.restygwt.client.TextCallback;
 import org.fusesource.restygwt.client.XmlCallback;
 import org.fusesource.restygwt.client.intercept.JsonDecoderInterceptor;
+import org.fusesource.restygwt.client.intercept.JsonDecoderRawInterceptor;
+import org.fusesource.restygwt.client.intercept.JsonDecoderRawInterceptorCallback;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
@@ -584,13 +586,47 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                                     Style style =
                                             jsonAnnotation != null ? jsonAnnotation.style()
                                                     : classStyle;
+                                    JsonDecoderRawInterceptor methodAnnotation =
+                                            source.getAnnotation(JsonDecoderRawInterceptor.class);
+                                    p("final String responseText = __method.getResponse().getText();");
+
+                                    JsonDecoderRawInterceptor classAnnotation =
+                                            resultType
+                                                    .getAnnotation(JsonDecoderRawInterceptor.class);
+
+                                    if (null != classAnnotation && null != classAnnotation.value()
+                                            && 0 < classAnnotation.value().length) {
+                                        for (Class<? extends JsonDecoderRawInterceptorCallback> callbackClazz : classAnnotation
+                                                .value()) {
+                                            // apply the incoming ``value`` straight to an
+                                            // interceptor
+                                            p(callbackClazz.getName()
+                                                    + ".INSTANCE.intercept(responseText, "
+                                                    + resultType
+                                                            .getParameterizedQualifiedSourceName()
+                                                    + ".class);");
+                                        }
+                                    }
+
+                                    if (null != methodAnnotation
+                                            && null != methodAnnotation.value()
+                                            && 0 < methodAnnotation.value().length) {
+                                        for (Class<? extends JsonDecoderRawInterceptorCallback> callbackClazz : methodAnnotation
+                                                .value()) {
+                                            // apply the incoming ``value`` straight to an
+                                            // interceptor
+                                            p(callbackClazz.getName()
+                                                    + ".INSTANCE.intercept(responseText, "
+                                                    + resultType
+                                                            .getParameterizedQualifiedSourceName()
+                                                    + ".class);");
+                                        }
+                                    }
+
                                     p("return "
-                                            + locator
-                                                    .decodeExpression(
-                                                            resultType,
-                                                            JSON_PARSER_CLASS
-                                                                    + ".parse(__method.getResponse().getText())",
-                                                            style) + ";");
+                                            + locator.decodeExpression(resultType,
+                                                    JSON_PARSER_CLASS + ".parse(responseText)",
+                                                    style) + ";");
                                 }
                                 i(-1).p("} catch (Throwable __e) {").i(1);
                                 {

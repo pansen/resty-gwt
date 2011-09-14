@@ -1,13 +1,11 @@
 package org.fusesource.restygwt.client.intercept;
 
-import org.fusesource.restygwt.client.intercept.JsonDecoderInterceptor;
-
 /**
  * just a dummy dto that shows us our interception will work
  * 
  * @author abalke
  */
-@JsonDecoderInterceptor({JsonDecoderInterceptorTestCallback.class})
+@JsonDecoderRawInterceptor({JsonDecoderRawInterceptorTestCallback.class})
 public class ResponseInterceptedDto {
 
     public String id;

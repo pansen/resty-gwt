@@ -31,9 +31,9 @@ import org.fusesource.restygwt.client.callback.FilterawareRetryingCallback;
 import org.fusesource.restygwt.client.dispatcher.CachingDispatcherFilter;
 import org.fusesource.restygwt.client.dispatcher.FilterawareDispatcher;
 import org.fusesource.restygwt.client.dispatcher.FilterawareRetryingDispatcher;
+import org.fusesource.restygwt.client.intercept.JsonDecoderRawInterceptorTestCallback;
 import org.fusesource.restygwt.client.intercept.ResponseInterceptedDto;
 import org.fusesource.restygwt.client.intercept.ServiceWithResponseInterceptorDto;
-import org.fusesource.restygwt.client.intercept.JsonDecoderInterceptorTestCallback;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.junit.client.GWTTestCase;
@@ -57,14 +57,17 @@ public class JsonDecoderInterceptorTestGwt extends GWTTestCase {
      * check the interceptor is in position
      */
     public void testGetAndIntercept() {
-        // defines our response dto via echoservlet
-        final String JSON_RESPONSE = "{\"name\":\"foo\", \"id\":\"U:ui\"}";
+        // defines our response dto via echoservlet - this is unusual formatted with purpose to
+        // to prove we're working on raw values
+        final String JSON_RESPONSE = "{     \"name\":\"foo\",  \"id\":\"U:ui\"          }";
 
         // before the test, there is nothing
         String lastInput =
-                ((JsonDecoderInterceptorTestCallback) JsonDecoderInterceptorTestCallback.INSTANCE).getLastInput();
+                ((JsonDecoderRawInterceptorTestCallback) JsonDecoderRawInterceptorTestCallback.INSTANCE)
+                        .getLastInput();
         Class<ResponseInterceptedDto> lastType =
-                ((JsonDecoderInterceptorTestCallback) JsonDecoderInterceptorTestCallback.INSTANCE).getLastType();
+                ((JsonDecoderRawInterceptorTestCallback) JsonDecoderRawInterceptorTestCallback.INSTANCE)
+                        .getLastType();
         assertEquals(null, lastInput);
         assertEquals(null, lastType);
 
@@ -74,12 +77,13 @@ public class JsonDecoderInterceptorTestGwt extends GWTTestCase {
             public void onSuccess(Method method, ResponseInterceptedDto response) {
                 // when the first interaction was done, we need to have valid input here
                 String lastInput =
-                        ((JsonDecoderInterceptorTestCallback) JsonDecoderInterceptorTestCallback.INSTANCE)
+                        ((JsonDecoderRawInterceptorTestCallback) JsonDecoderRawInterceptorTestCallback.INSTANCE)
                                 .getLastInput();
                 Class<ResponseInterceptedDto> lastType =
-                        ((JsonDecoderInterceptorTestCallback) JsonDecoderInterceptorTestCallback.INSTANCE)
+                        ((JsonDecoderRawInterceptorTestCallback) JsonDecoderRawInterceptorTestCallback.INSTANCE)
                                 .getLastType();
 
+                // the stringified version of this must be the same as above
                 assertEquals(JSON_RESPONSE, lastInput);
                 assertEquals(ResponseInterceptedDto.class, lastType);
                 finishTest();
