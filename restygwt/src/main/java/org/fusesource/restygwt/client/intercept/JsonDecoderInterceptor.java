@@ -33,6 +33,6 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 @Target({java.lang.annotation.ElementType.TYPE})
 public @interface JsonDecoderInterceptor {
-
+    @SuppressWarnings("rawtypes")
     Class<? extends JsonDecoderInterceptorCallback>[] value();
 }

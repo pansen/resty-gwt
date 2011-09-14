@@ -2,13 +2,13 @@
  * Copyright (C) 2009-2010 the original author or authors.
  * See the notice.md file distributed with this work for additional
  * information regarding copyright ownership.
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,7 +23,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.logging.Logger;
 
 import org.fusesource.restygwt.rebind.AnnotationResolver;
 
@@ -39,8 +38,9 @@ import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.XMLParser;
+
 /**
- *
+ * 
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
 public class Method {
@@ -48,14 +48,14 @@ public class Method {
     /**
      * GWT hides the full spectrum of methods because safari has a bug:
      * http://bugs.webkit.org/show_bug.cgi?id=3812
-     *
+     * 
      * We extend assume the server side will also check the
      * X-HTTP-Method-Override header.
-     *
+     * 
      * TODO: add an option to support using this approach to bypass restrictive
      * firewalls even if the browser does support the setting all the method
      * types.
-     *
+     * 
      * @author chirino
      */
     static private class MethodRequestBuilder extends RequestBuilder {
@@ -71,10 +71,10 @@ public class Method {
 
     final Set<Integer> expectedStatuses;
     {
-      expectedStatuses = new HashSet<Integer>();
-      expectedStatuses.add(200);
-      expectedStatuses.add(201);
-      expectedStatuses.add(204);
+        expectedStatuses = new HashSet<Integer>();
+        expectedStatuses.add(200);
+        expectedStatuses.add(201);
+        expectedStatuses.add(204);
     };
     boolean anyStatus;
 
@@ -134,7 +134,6 @@ public class Method {
         defaultContentType(Resource.CONTENT_TYPE_JSON);
         builder.setRequestData(data.toString());
 
-
         return this;
     }
 
@@ -150,23 +149,23 @@ public class Method {
     }
 
     /**
-     * sets the expected response status code.  If the response status code does not match
-     * any of the values specified then the request is considered to have failed.  Defaults to accepting
+     * sets the expected response status code. If the response status code does not match
+     * any of the values specified then the request is considered to have failed. Defaults to
+     * accepting
      * 200,201,204. If set to -1 then any status code is considered a success.
      */
-    public Method expect(int ... statuses) {
-        if ( statuses.length==1 && statuses[0] < 0) {
+    public Method expect(int... statuses) {
+        if (statuses.length == 1 && statuses[0] < 0) {
             anyStatus = true;
         } else {
             anyStatus = false;
             this.expectedStatuses.clear();
-            for( int status : statuses ) {
+            for (int status : statuses) {
                 this.expectedStatuses.add(status);
             }
         }
         return this;
     }
-
 
     public boolean isExpected(int status) {
         if (anyStatus) {
@@ -191,7 +190,8 @@ public class Method {
                 }
             });
         } catch (Throwable e) {
-            GWT.log("Received http error for: " + builder.getHTTPMethod() + " " + builder.getUrl(), e);
+            GWT.log("Received http error for: " + builder.getHTTPMethod() + " " + builder.getUrl(),
+                    e);
             callback.onFailure(this, e);
         }
     }
@@ -205,12 +205,14 @@ public class Method {
                     try {
                         return JSONParser.parseStrict(response.getText());
                     } catch (Throwable e) {
-                        throw new ResponseFormatException("Response was NOT a valid JSON document", e);
+                        throw new ResponseFormatException("Response was NOT a valid JSON document",
+                                e);
                     }
                 }
             });
         } catch (Throwable e) {
-            GWT.log("Received http error for: " + builder.getHTTPMethod() + " " + builder.getUrl(), e);
+            GWT.log("Received http error for: " + builder.getHTTPMethod() + " " + builder.getUrl(),
+                    e);
             callback.onFailure(this, e);
         }
     }
@@ -223,18 +225,19 @@ public class Method {
                     try {
                         return XMLParser.parse(response.getText());
                     } catch (Throwable e) {
-                        throw new ResponseFormatException("Response was NOT a valid XML document", e);
+                        throw new ResponseFormatException("Response was NOT a valid XML document",
+                                e);
                     }
                 }
             });
         } catch (Throwable e) {
-            GWT.log("Received http error for: " + builder.getHTTPMethod() + " " + builder.getUrl(), e);
+            GWT.log("Received http error for: " + builder.getHTTPMethod() + " " + builder.getUrl(),
+                    e);
             callback.onFailure(this, e);
         }
     }
 
     public <T extends JavaScriptObject> void send(final OverlayCallback<T> callback) {
-
 
         defaultAcceptType(Resource.CONTENT_TYPE_JSON);
         try {
@@ -250,14 +253,17 @@ public class Method {
                             throw new ResponseFormatException("Response was NOT a JSON object");
                         }
                     } catch (JSONException e) {
-                        throw new ResponseFormatException("Response was NOT a valid JSON document", e);
+                        throw new ResponseFormatException("Response was NOT a valid JSON document",
+                                e);
                     } catch (IllegalArgumentException e) {
-                        throw new ResponseFormatException("Response was NOT a valid JSON document", e);
+                        throw new ResponseFormatException("Response was NOT a valid JSON document",
+                                e);
                     }
                 }
             });
         } catch (Throwable e) {
-            GWT.log("Received http error for: " + builder.getHTTPMethod() + " " + builder.getUrl(), e);
+            GWT.log("Received http error for: " + builder.getHTTPMethod() + " " + builder.getUrl(),
+                    e);
             callback.onFailure(this, e);
         }
     }
@@ -293,7 +299,7 @@ public class Method {
     /**
      * add some information onto the method which could be interesting when this method
      * comes back to the dispatcher.
-     *
+     * 
      * @param key
      * @param value
      */
@@ -303,7 +309,7 @@ public class Method {
 
     /**
      * get all data fields which was previously added
-     *
+     * 
      * @return
      */
     public Map<String, String> getData() {
