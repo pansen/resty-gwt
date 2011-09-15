@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.fusesource.restygwt.client.basic;
+package org.fusesource.restygwt.client.intercept;
 
 import org.fusesource.restygwt.client.Defaults;
 import org.fusesource.restygwt.client.Method;
@@ -31,11 +31,9 @@ import org.fusesource.restygwt.client.callback.FilterawareRetryingCallback;
 import org.fusesource.restygwt.client.dispatcher.CachingDispatcherFilter;
 import org.fusesource.restygwt.client.dispatcher.FilterawareDispatcher;
 import org.fusesource.restygwt.client.dispatcher.FilterawareRetryingDispatcher;
-import org.fusesource.restygwt.client.intercept.JsonDecoderRawInterceptorTestCallback;
-import org.fusesource.restygwt.client.intercept.ResponseInterceptedDto;
-import org.fusesource.restygwt.client.intercept.ServiceWithResponseInterceptorDto;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.junit.client.GWTTestCase;
 
 /**
@@ -48,44 +46,119 @@ public class JsonDecoderInterceptorTestGwt extends GWTTestCase {
 
     private ServiceWithResponseInterceptorDto service;
 
+    // defines our response dto via echoservlet - this is unusual formatted with purpose to
+    // to prove we're working on raw values
+    private final String JSON_RESPONSE = "{     \"name\":\"foo\",  \"id\":\"U:ui\"          }";
+
     @Override
     public String getModuleName() {
         return "org.fusesource.restygwt.Event";
     }
 
     /**
-     * check the interceptor is in position
+     * check the interceptor is working when a dto is annotated
+     * 
+     * @see SimpleResponseInterceptedDto
      */
-    public void testGetAndIntercept() {
-        // defines our response dto via echoservlet - this is unusual formatted with purpose to
-        // to prove we're working on raw values
-        final String JSON_RESPONSE = "{     \"name\":\"foo\",  \"id\":\"U:ui\"          }";
+    public void testGetAndInterceptRaw_OnDto() {
 
-        // before the test, there is nothing
+        // before the test, there is nothing (only working on the first test)
         String lastInput =
                 ((JsonDecoderRawInterceptorTestCallback) JsonDecoderRawInterceptorTestCallback.INSTANCE)
                         .getLastInput();
-        Class<ResponseInterceptedDto> lastType =
+        Class<SimpleResponseInterceptedDto> lastType =
                 ((JsonDecoderRawInterceptorTestCallback) JsonDecoderRawInterceptorTestCallback.INSTANCE)
                         .getLastType();
         assertEquals(null, lastInput);
         assertEquals(null, lastType);
 
-        service.get(JSON_RESPONSE, "U:ui", new MethodCallback<ResponseInterceptedDto>() {
+        service.getDtoIntercepted(JSON_RESPONSE, "U:ui",
+                new MethodCallback<SimpleResponseInterceptedDto>() {
+
+                    @Override
+                    public void onSuccess(Method method, SimpleResponseInterceptedDto response) {
+                        // when the first interaction was done, we need to have valid input here
+                        String lastInput =
+                                ((JsonDecoderRawInterceptorTestCallback) JsonDecoderRawInterceptorTestCallback.INSTANCE)
+                                        .getLastInput();
+                        Class<SimpleResponseInterceptedDto> lastType =
+                                ((JsonDecoderRawInterceptorTestCallback) JsonDecoderRawInterceptorTestCallback.INSTANCE)
+                                        .getLastType();
+
+                        // the stringified version of this must be the same as above
+                        assertEquals(JSON_RESPONSE, lastInput);
+                        assertEquals(SimpleResponseInterceptedDto.class, lastType);
+                        finishTest();
+                    }
+
+                    @Override
+                    public void onFailure(Method method, Throwable exception) {
+                        fail("on failure: " + exception.getMessage());
+                    }
+                });
+
+        delayTestFinish(10000);
+    }
+
+    /**
+     * check the interceptor is working when a dto is annotated
+     * 
+     * @see SimpleResponseInterceptedDto
+     */
+    public void testGetAndInterceptRaw_OnServiceMethod() {
+        service.getServiceIntercepted(JSON_RESPONSE, "U:uu", new MethodCallback<SimpleDto>() {
 
             @Override
-            public void onSuccess(Method method, ResponseInterceptedDto response) {
+            public void onSuccess(Method method, SimpleDto response) {
                 // when the first interaction was done, we need to have valid input here
                 String lastInput =
                         ((JsonDecoderRawInterceptorTestCallback) JsonDecoderRawInterceptorTestCallback.INSTANCE)
                                 .getLastInput();
-                Class<ResponseInterceptedDto> lastType =
+                Class<SimpleResponseInterceptedDto> lastType =
                         ((JsonDecoderRawInterceptorTestCallback) JsonDecoderRawInterceptorTestCallback.INSTANCE)
                                 .getLastType();
 
                 // the stringified version of this must be the same as above
                 assertEquals(JSON_RESPONSE, lastInput);
-                assertEquals(ResponseInterceptedDto.class, lastType);
+                assertEquals(SimpleResponseInterceptedDto.class, lastType);
+                finishTest();
+            }
+
+            @Override
+            public void onFailure(Method method, Throwable exception) {
+                fail("on failure: " + exception.getMessage());
+            }
+        });
+
+        delayTestFinish(10000);
+    }
+
+    /**
+     * check the interceptor is working when a dto is annotated
+     * 
+     * @see SimpleResponseInterceptedDto
+     */
+    public void testGetAndIntercept_OnDto() {
+        service.getServiceIntercepted(JSON_RESPONSE, "U:ua", new MethodCallback<SimpleDto>() {
+
+            @Override
+            public void onSuccess(Method method, SimpleDto response) {
+                // when the first interaction was done, we need to have valid input here
+                JSONValue lastInput =
+                        ((JsonDecoderInterceptorTestCallback) JsonDecoderInterceptorTestCallback.INSTANCE)
+                                .getLastInput();
+                Class<SimpleResponseInterceptedDto> lastType =
+                        ((JsonDecoderInterceptorTestCallback) JsonDecoderInterceptorTestCallback.INSTANCE)
+                                .getLastType();
+
+                // the stringified version is not the same as its already preprocessed
+                assertNotSame(JSON_RESPONSE, lastInput);
+                // the interceptor gets a preparsed JSONObject
+                assertNotNull(lastInput.isObject());
+                // ...instead we have a version here that is just a ``toString`` result of
+                // JSONObject
+                assertEquals("{\"name\":\"foo\", \"id\":\"U:ui\"}", lastInput.toString());
+                assertEquals(SimpleResponseInterceptedDto.class, lastType);
                 finishTest();
             }
 

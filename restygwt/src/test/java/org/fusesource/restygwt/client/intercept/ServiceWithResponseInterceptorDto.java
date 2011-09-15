@@ -30,6 +30,12 @@ import org.fusesource.restygwt.client.RestService;
 public interface ServiceWithResponseInterceptorDto extends RestService {
     @GET
     @Path("/responseInterceptorDto/{id}")
-    public void get(@HeaderParam("X-Echo-Body") String response, @PathParam("id") String id,
-            MethodCallback<ResponseInterceptedDto> callback);
+    public void getDtoIntercepted(@HeaderParam("X-Echo-Body") String response,
+            @PathParam("id") String id, MethodCallback<SimpleResponseInterceptedDto> callback);
+
+    @GET
+    @Path("/responseInterceptorDto/{id}")
+    @JsonDecoderRawInterceptor(JsonDecoderRawInterceptorTestCallback.class)
+    public void getServiceIntercepted(@HeaderParam("X-Echo-Body") String response,
+            @PathParam("id") String id, MethodCallback<SimpleDto> callback);
 }
