@@ -59,6 +59,7 @@ public class JsonDecoderInterceptorTestGwt extends GWTTestCase {
      * check the interceptor is working when a dto is annotated
      * 
      * @see SimpleResponseInterceptedDto
+     * @see JsonDecoderRawInterceptorTestCallback
      */
     public void testGetAndInterceptRaw_OnDto() {
 
@@ -103,7 +104,8 @@ public class JsonDecoderInterceptorTestGwt extends GWTTestCase {
     /**
      * check the interceptor is working when a dto is annotated
      * 
-     * @see SimpleResponseInterceptedDto
+     * @see ServiceWithResponseInterceptorDto
+     * @see JsonDecoderRawInterceptorTestCallback
      */
     public void testGetAndInterceptRaw_OnServiceMethod() {
         service.getServiceIntercepted(JSON_RESPONSE, "U:uu", new MethodCallback<SimpleDto>() {
@@ -137,6 +139,7 @@ public class JsonDecoderInterceptorTestGwt extends GWTTestCase {
      * check the interceptor is working when a dto is annotated
      * 
      * @see SimpleResponseInterceptedDto
+     * @see JsonDecoderInterceptorTestCallback
      */
     public void testGetAndIntercept_OnDto() {
         service.getServiceIntercepted(JSON_RESPONSE, "U:ua", new MethodCallback<SimpleDto>() {
