@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2010 the original author or authors.
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,6 +15,8 @@
  */
 
 package org.fusesource.restygwt.client.intercept;
+
+import java.util.Map;
 
 import org.fusesource.restygwt.client.Defaults;
 import org.fusesource.restygwt.client.Method;
@@ -39,7 +41,7 @@ import com.google.gwt.junit.client.GWTTestCase;
 /**
  * test to check if {@link CachingCallbackFilter} {@link QueueableCacheStorage} and caching stuff in
  * complete works as expected
- *
+ * 
  * @author <a href="mailto:andi.balke@gmail.com">andi</a>
  */
 public class JsonDecoderInterceptorTestGwt extends GWTTestCase {
@@ -57,7 +59,7 @@ public class JsonDecoderInterceptorTestGwt extends GWTTestCase {
 
     /**
      * check the interceptor is working when a dto is annotated
-     *
+     * 
      * @see SimpleResponseInterceptedDto
      * @see JsonDecoderRawInterceptorTestCallback
      */
@@ -150,7 +152,55 @@ public class JsonDecoderInterceptorTestGwt extends GWTTestCase {
 
     /**
      * check the interceptor is working when a dto is annotated
-     *
+     * 
+     * @see JsonDecoderRawInterceptorTestCallback
+     * @see SimpleResponseInterceptedDto
+     */
+    public void testGetAndInterceptRaw_OnServiceMethod_withGenericDto() {
+        // clear all optional previous values
+        ((JsonDecoderRawInterceptorServiceTestCallbackGeneric) JsonDecoderRawInterceptorServiceTestCallbackGeneric.INSTANCE)
+                .clear();
+        // all values should be null
+        String lastInput =
+                ((JsonDecoderRawInterceptorServiceTestCallbackGeneric) JsonDecoderRawInterceptorServiceTestCallbackGeneric.INSTANCE)
+                        .getLastInput();
+        Class<Map> lastType =
+                ((JsonDecoderRawInterceptorServiceTestCallbackGeneric) JsonDecoderRawInterceptorServiceTestCallbackGeneric.INSTANCE)
+                        .getLastType();
+        assertEquals(null, lastInput);
+        assertEquals(null, lastType);
+        final String expectedResponse = "{\"key\":" + JSON_RESPONSE + "}";
+
+        service.getServiceInterceptedGeneric(expectedResponse, "U:uui",
+                new MethodCallback<Map<String, SimpleDto>>() {
+
+                    @Override
+                    public void onSuccess(Method method, Map<String, SimpleDto> response) {
+                        // when the first interaction was done, we need to have valid input here
+                        String lastInput =
+                                ((JsonDecoderRawInterceptorServiceTestCallbackGeneric) JsonDecoderRawInterceptorServiceTestCallbackGeneric.INSTANCE)
+                                        .getLastInput();
+                        Class<Map> lastType =
+                                ((JsonDecoderRawInterceptorServiceTestCallbackGeneric) JsonDecoderRawInterceptorServiceTestCallbackGeneric.INSTANCE)
+                                        .getLastType();
+
+                        // the stringified version of this must be the same as above
+                        assertEquals(expectedResponse, lastInput);
+                        assertEquals(Map.class, lastType);
+                        finishTest();
+                    }
+
+                    @Override
+                    public void onFailure(Method method, Throwable exception) {
+                        fail("on failure: " + exception.getMessage());
+                    }
+                });
+        delayTestFinish(10000);
+    }
+
+    /**
+     * check the interceptor is working when a dto is annotated
+     * 
      * @see SimpleResponseInterceptedDto
      * @see JsonDecoderInterceptorTestCallback
      */

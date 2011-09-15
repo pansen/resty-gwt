@@ -2,13 +2,13 @@
  * Copyright (C) 2009-2010 the original author or authors.
  * See the notice.md file distributed with this work for additional
  * information regarding copyright ownership.
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -90,9 +90,9 @@ import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.xml.client.Document;
 
 /**
- *
+ * 
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
- *
+ * 
  *         Updates: added automatically create resource from Path annotation,
  *         enhanced generics support
  * @author <a href="http://www.acuedo.com">Dave Finch</a>
@@ -119,7 +119,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
 
     /*
      * static class in which are some compile-time relevant infos.
-     *
+     * 
      * TODO (andi): too much flexibility and overhead with reflection here?
      */
     private static final Class<BindingDefaults> BINDING_DEFAULTS = BindingDefaults.class;
@@ -604,6 +604,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                                                     + ".INSTANCE.intercept(responseText, "
                                                     + resultType
                                                             .getParameterizedQualifiedSourceName()
+                                                            .toString().replaceAll("<.*", "")
                                                     + ".class);");
                                         }
                                     }
@@ -615,11 +616,14 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                                                 .value()) {
                                             // apply the incoming ``value`` straight to an
                                             // interceptor
+                                            String expectedClassType =
+                                                    resultType
+                                                            .getParameterizedQualifiedSourceName()
+                                                            .toString().replaceAll("<.*", "");
+
                                             p(callbackClazz.getName()
                                                     + ".INSTANCE.intercept(responseText, "
-                                                    + resultType
-                                                            .getParameterizedQualifiedSourceName()
-                                                    + ".class);");
+                                                    + expectedClassType + ".class);");
                                         }
                                     }
 
@@ -754,9 +758,9 @@ public class RestServiceClassCreator extends BaseSourceCreator {
 
     /**
      * access additional AnnotationResolvers possibly added by
-     *
+     * 
      * {@link BindingDefaults#addAnnotationResolver(AnnotationResolver)}
-     *
+     * 
      * @return
      */
     @SuppressWarnings("unchecked")
@@ -805,7 +809,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
 
     /**
      * resolve {@link JsonDecoderInterceptor} annotations and write appropriate handler code
-     *
+     * 
      * @return the generated code
      */
     private String writeRequestInterception(JMethod method) {
