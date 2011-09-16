@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2011 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -37,13 +37,13 @@ public interface ServiceWithResponseInterceptorDto extends RestService {
 
     @GET
     @Path("/responseInterceptorDto/{id}")
-    @JsonDecoderRawInterceptor(JsonDecoderRawInterceptorServiceTestCallback.class)
+    @JsonDecoderRawInterceptor(JsonDecoderRawInterceptorTestCallback.class)
     public void getServiceIntercepted(@HeaderParam("X-Echo-Body") String response,
             @PathParam("id") String id, MethodCallback<SimpleDto> callback);
 
     @GET
     @Path("/responseInterceptorDto/{id}")
-    @JsonDecoderRawInterceptor(JsonDecoderRawInterceptorServiceTestCallbackGeneric.class)
+    @JsonDecoderRawInterceptor(JsonDecoderRawInterceptorTestCallback.class)
     public void getServiceInterceptedGeneric(@HeaderParam("X-Echo-Body") String response,
             @PathParam("id") String id, MethodCallback<Map<String, SimpleDto>> callback);
 

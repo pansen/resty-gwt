@@ -17,9 +17,9 @@
 package org.fusesource.restygwt.client.intercept;
 
 public class JsonDecoderRawInterceptorTestCallback implements
-        JsonDecoderRawInterceptorCallback<SimpleResponseInterceptedDto> {
+        JsonDecoderRawInterceptorCallback {
 
-    public static final JsonDecoderRawInterceptorCallback<SimpleResponseInterceptedDto> INSTANCE =
+    public static final JsonDecoderRawInterceptorCallback INSTANCE =
             new JsonDecoderRawInterceptorTestCallback();
 
     /**
@@ -30,10 +30,10 @@ public class JsonDecoderRawInterceptorTestCallback implements
     /**
      * property for testing purpose
      */
-    private Class<SimpleResponseInterceptedDto> lastType;
+    private Class lastType;
 
     @Override
-    public void intercept(final String input, Class<SimpleResponseInterceptedDto> expectedType) {
+    public void intercept(final String input, Class expectedType) {
         lastInput = input;
         lastType = expectedType;
     }
@@ -42,7 +42,7 @@ public class JsonDecoderRawInterceptorTestCallback implements
         return lastInput;
     }
 
-    public Class<SimpleResponseInterceptedDto> getLastType() {
+    public Class getLastType() {
         return lastType;
     }
 
