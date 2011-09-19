@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2010 the original author or authors.
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -41,7 +41,7 @@ import com.google.gwt.junit.client.GWTTestCase;
 /**
  * test to check if {@link CachingCallbackFilter} {@link QueueableCacheStorage} and caching stuff in
  * complete works as expected
- *
+ * 
  * @author <a href="mailto:andi.balke@gmail.com">andi</a>
  */
 public class JsonDecoderInterceptorTestGwt extends GWTTestCase {
@@ -59,7 +59,7 @@ public class JsonDecoderInterceptorTestGwt extends GWTTestCase {
 
     /**
      * check the interceptor is working when a dto is annotated
-     *
+     * 
      * @see SimpleResponseInterceptedDto
      * @see JsonDecoderRawInterceptorTestCallback
      */
@@ -72,8 +72,12 @@ public class JsonDecoderInterceptorTestGwt extends GWTTestCase {
         Class<SimpleResponseInterceptedDto> lastType =
                 ((JsonDecoderRawInterceptorTestCallback) JsonDecoderRawInterceptorTestCallback.INSTANCE)
                         .getLastType();
+        String lastUrl =
+                ((JsonDecoderRawInterceptorTestCallback) JsonDecoderRawInterceptorTestCallback.INSTANCE)
+                        .getLastUrl();
         assertEquals(null, lastInput);
         assertEquals(null, lastType);
+        assertEquals(null, lastUrl);
 
         service.getDtoIntercepted(JSON_RESPONSE, "U:ui",
                 new MethodCallback<SimpleResponseInterceptedDto>() {
@@ -87,10 +91,14 @@ public class JsonDecoderInterceptorTestGwt extends GWTTestCase {
                         Class<SimpleResponseInterceptedDto> lastType =
                                 ((JsonDecoderRawInterceptorTestCallback) JsonDecoderRawInterceptorTestCallback.INSTANCE)
                                         .getLastType();
+                        String lastUrl =
+                                ((JsonDecoderRawInterceptorTestCallback) JsonDecoderRawInterceptorTestCallback.INSTANCE)
+                                        .getLastUrl();
 
                         // the stringified version of this must be the same as above
                         assertEquals(JSON_RESPONSE, lastInput);
                         assertEquals(SimpleResponseInterceptedDto.class, lastType);
+                        assertTrue(lastUrl.endsWith("responseInterceptorDto/U:ui"));
                         finishTest();
                     }
 
@@ -105,7 +113,7 @@ public class JsonDecoderInterceptorTestGwt extends GWTTestCase {
 
     /**
      * check the interceptor is working when a dto is annotated
-     *
+     * 
      * @see JsonDecoderRawInterceptorTestCallback
      * @see SimpleResponseInterceptedDto
      */
@@ -152,7 +160,7 @@ public class JsonDecoderInterceptorTestGwt extends GWTTestCase {
 
     /**
      * check the interceptor is working when a dto is annotated
-     *
+     * 
      * @see JsonDecoderRawInterceptorTestCallback
      * @see SimpleResponseInterceptedDto
      */
@@ -200,7 +208,7 @@ public class JsonDecoderInterceptorTestGwt extends GWTTestCase {
 
     /**
      * check the interceptor is working when a dto is annotated
-     *
+     * 
      * @see SimpleResponseInterceptedDto
      * @see JsonDecoderInterceptorTestCallback
      */

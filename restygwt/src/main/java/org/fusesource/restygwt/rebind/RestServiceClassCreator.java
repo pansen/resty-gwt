@@ -601,7 +601,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                                             // apply the incoming ``value`` straight to an
                                             // interceptor
                                             p(callbackClazz.getName()
-                                                    + ".INSTANCE.intercept(responseText, "
+                                                    + ".INSTANCE.intercept(responseText, __method, "
                                                     + resultType
                                                             .getParameterizedQualifiedSourceName()
                                                             .toString().replaceAll("<.*", "")
@@ -622,7 +622,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                                                             .toString().replaceAll("<.*", "");
 
                                             p(callbackClazz.getName()
-                                                    + ".INSTANCE.intercept(responseText, "
+                                                    + ".INSTANCE.intercept(responseText, __method, "
                                                     + expectedClassType + ".class);");
                                         }
                                     }
