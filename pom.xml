@@ -30,9 +30,9 @@
 
   <groupId>org.fusesource.restygwt</groupId>
   <artifactId>restygwt-project</artifactId>
-  <version>1.2-SEC.16-SNAPSHOT</version>
+  <version>1.2-SEC.17-SNAPSHOT</version>
   <packaging>pom</packaging>
-  
+
   <name>${project.artifactId}</name>
   <description>RestyGWT is a GWT generator for REST services and JSON encoded data transfer objects</description>
 
@@ -41,7 +41,8 @@
     <forge-project-id-uc>RESTYGWT</forge-project-id-uc>
 
     <release-altGitURL>scm:git:ssh://git@github.com:chirino/resty-gwt.git</release-altGitURL>
-    <gwt-version>2.2.0</gwt-version>
+    <gwt-version>2.4.0</gwt-version>
+    <org.codehaus.mojo.gwt-maven-plugin.version>2.3.0-1</org.codehaus.mojo.gwt-maven-plugin.version>
   </properties>
 
   <url>http://${forge-project-id}.fusesource.org</url>
@@ -51,7 +52,7 @@
     <system>jira</system>
     <url>http://github.com/chirino/resty-gwt/issues</url>
   </issueManagement>
-  
+
   <mailingLists>
     <mailingList>
       <name>RestyGWT Development List</name>
@@ -69,7 +70,7 @@
       <distribution>repo</distribution>
     </license>
   </licenses>
-  
+
   <scm>
     <connection>scm:git:git://github.com/chirino/resty-gwt.git</connection>
     <developerConnection>${release-altGitURL}</developerConnection>
@@ -82,7 +83,7 @@
       <url>dav:http://fusesource.com/forge/dav/${forge-project-id}/maven/${project.version}</url>
     </site>
   </distributionManagement>
-  
+
   <developers>
     <developer>
       <id>chirino</id>
@@ -100,7 +101,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>gwt-maven-plugin</artifactId>
-        <version>${gwt-version}</version>
+        <version>${org.codehaus.mojo.gwt-maven-plugin.version}</version>
         <executions>
           <execution>
             <goals>
@@ -111,6 +112,21 @@
         <configuration>
           <!-- <gwtHome>${env.GWT_HOME}</gwtHome> -->
         </configuration>
+        <dependencies>
+        <!-- configure plugin to use the gwt version that we use
+            http://mojo.codehaus.org/gwt-maven-plugin/user-guide/using-different-gwt-sdk-version.html
+            -->
+            <dependency>
+                <groupId>com.google.gwt</groupId>
+                <artifactId>gwt-user</artifactId>
+                <version>${gwt-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.gwt</groupId>
+                <artifactId>gwt-dev</artifactId>
+                <version>${gwt-version}</version>
+            </dependency>
+        </dependencies>
       </plugin>
 
       <plugin>
@@ -135,7 +151,7 @@
     </plugins>
     </pluginManagement>
   </build>
-  
+
   <reporting>
     <plugins>
       <plugin>
@@ -189,12 +205,12 @@
       </plugin>
     </plugins>
   </reporting>
-  
+
 
   <profiles>
-    <!-- 
-        Do a license check by running       : mvn -P license license:check  
-        UPdate the license check by running : mvn -P license license:format  
+    <!--
+        Do a license check by running       : mvn -P license license:check
+        UPdate the license check by running : mvn -P license license:format
       -->
     <profile>
       <id>license</id>
@@ -219,7 +235,7 @@
 
                 <exclude>**/*.response-headers</exclude>
                 <exclude>**/*.response</exclude>
-            
+
                 <!-- ignore binary files -->
                 <exclude>**/*.jpg</exclude>
                 <exclude>**/*.png</exclude>
@@ -237,12 +253,12 @@
                   <goal>check</goal>
                 </goals>
               </execution>
-            </executions>        
+            </executions>
           </plugin>
         </plugins>
       </build>
     </profile>
-    
+
     <profile>
       <id>download</id>
       <repositories>

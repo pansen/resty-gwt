@@ -2,13 +2,13 @@
  * Copyright (C) 2009-2010 the original author or authors.
  * See the notice.md file distributed with this work for additional
  * information regarding copyright ownership.
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,9 +32,9 @@ import com.google.gwt.http.client.RequestException;
  * <p/>
  * Thanks David!
  * <p/>
- * Especially: - Waiting if a particular request is already on the way
- * (otherwise you end up having many requests on the same source.
- *
+ * Especially: - Waiting if a particular request is already on the way (otherwise you end up having
+ * many requests on the same source.
+ * 
  * @author <a href="mailto:mail@raphaelbauer.com">rEyez</<a>
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
@@ -43,9 +43,8 @@ public class DefaultDispatcher implements Dispatcher {
     public static final DefaultDispatcher INSTANCE = new DefaultDispatcher();
 
     public Request send(Method method, RequestBuilder builder) throws RequestException {
-        GWT.log("Sending http request: " + builder.getHTTPMethod() + " "
-                + builder.getUrl() + " ,timeout:"
-                + builder.getTimeoutMillis(), null);
+        GWT.log("Sending http request: " + builder.getHTTPMethod() + " " + builder.getUrl()
+                + " ,timeout:" + builder.getTimeoutMillis(), null);
 
         String content = builder.getRequestData();
         if (content != null && content.length() > 0) {
@@ -53,6 +52,5 @@ public class DefaultDispatcher implements Dispatcher {
         }
         return builder.send();
     }
-
 
 }
