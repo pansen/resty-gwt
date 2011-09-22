@@ -2,13 +2,13 @@
  * Copyright (C) 2009-2010 the original author or authors.
  * See the notice.md file distributed with this work for additional
  * information regarding copyright ownership.
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,12 +19,13 @@
 package org.fusesource.restygwt.client;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.http.client.Header;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
 
 /**
- *
+ * 
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
 public abstract class AbstractRequestCallback<T> implements RequestCallback {
@@ -43,9 +44,41 @@ public abstract class AbstractRequestCallback<T> implements RequestCallback {
         callback.onFailure(this.method, exception);
     }
 
-    final public void onResponseReceived(Request request, Response response) {
+    final public void onResponseReceived(final Request request, final Response response) {
         this.method.request = request;
-        this.method.response = response;
+        this.method.response = new Response() {
+
+            @Override
+            public String getHeader(String header) {
+                return response.getHeader(header);
+            }
+
+            @Override
+            public Header[] getHeaders() {
+                return response.getHeaders();
+            }
+
+            @Override
+            public String getHeadersAsString() {
+                return response.getHeadersAsString();
+            }
+
+            @Override
+            public int getStatusCode() {
+                return response.getStatusCode();
+            }
+
+            @Override
+            public String getStatusText() {
+                return response.getStatusText();
+            }
+
+            @Override
+            public String getText() {
+                return response.getText().replaceFirst("^<\\{\\(", "");
+            }
+
+        };
         if (response == null) {
             callback.onFailure(this.method, new FailedStatusCodeException("TIMEOUT", 999));
         } else if (isFailedStatus(response)) {
@@ -54,8 +87,9 @@ public abstract class AbstractRequestCallback<T> implements RequestCallback {
         } else {
             T value;
             try {
-                GWT.log("Received http response for request: " + this.method.builder.getHTTPMethod()
-                        + " " + this.method.builder.getUrl(), null);
+                GWT.log("Received http response for request: "
+                        + this.method.builder.getHTTPMethod() + " " + this.method.builder.getUrl(),
+                        null);
                 String content = response.getText();
                 if (content != null && content.length() > 0) {
                     GWT.log(content, null);
