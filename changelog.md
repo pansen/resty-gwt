@@ -3,6 +3,7 @@ RestyGWT
 
 [resty-gwt 1.1 Events]
 ---------------
+* implement "don't be evil" filter for ``<{(`` prefix
 * depend on GWT 2.4
 * implement ``œJsonDecoderInterceptor`` annotation to preprocess JSON responses
   on a DTO basis
