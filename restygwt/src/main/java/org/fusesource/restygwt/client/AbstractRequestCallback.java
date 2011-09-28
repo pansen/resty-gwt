@@ -75,7 +75,7 @@ public abstract class AbstractRequestCallback<T> implements RequestCallback {
 
             @Override
             public String getText() {
-                return response.getText().replaceFirst("^<\\{\\(", "");
+                return response.getText().replaceFirst("^<\\{\\(", "").replaceFirst("^\\)\\}>", "");
             }
 
         };
