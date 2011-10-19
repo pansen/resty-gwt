@@ -35,7 +35,7 @@ public class DontBeEvilTestGwt extends GWTTestCase {
     /**
      * fake response for the GET request (service.getItems)
      */
-    private static final String responseGetBody = "<{([{id:1},{id:2},{id:3}]";
+    private static final String responseGetBody = "  <{([{id:1},{id:2},{id:3}]";
 
     @Override
     public String getModuleName() {
