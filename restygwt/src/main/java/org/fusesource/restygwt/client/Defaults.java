@@ -2,13 +2,13 @@
  * Copyright (C) 2009-2010 the original author or authors.
  * See the notice.md file distributed with this work for additional
  * information regarding copyright ownership.
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,19 +18,17 @@
 
 package org.fusesource.restygwt.client;
 
-
 import org.fusesource.restygwt.client.dispatcher.DefaultDispatcher;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.logging.client.LogConfiguration;
 
 /**
  * Provides ability to set the default date format and service root (defaults to
  * GWT.getModuleBaseURL()).
- *
- *
+ * 
+ * 
  * @author <a href="http://www.acuedo.com">Dave Finch</a>
- *
+ * 
  */
 public class Defaults {
 
@@ -43,18 +41,18 @@ public class Defaults {
     // if >-1, used in Method class to set timeout
     private static int requestTimeout = -1;
 
-
     public static String getServiceRoot() {
         return serviceRoot;
     }
 
     /**
      * sets the URL prepended to the value of Path annotations.
-     *
+     * 
      * @param serviceRoot
      */
     public static void setServiceRoot(String serviceRoot) {
-        // GWT.getModuleBaseURL() is guaranteed to end with a slash, so should any custom service root
+        // GWT.getModuleBaseURL() is guaranteed to end with a slash, so should any custom service
+        // root
         if (!serviceRoot.endsWith("/")) {
             serviceRoot += "/";
         }
@@ -67,7 +65,7 @@ public class Defaults {
 
     /**
      * Sets the format used when encoding and decoding Dates.
-     *
+     * 
      * @param dateFormat
      */
     public static void setDateFormat(String dateFormat) {
@@ -99,7 +97,7 @@ public class Defaults {
 
     /**
      * Sets the default dispatcher used by Method instances.
-     *
+     * 
      * @param value
      */
     public static void setDispatcher(Dispatcher value) {
@@ -108,26 +106,10 @@ public class Defaults {
 
     /**
      * Returns the default dispatcher.
-     *
+     * 
      * @return
      */
     public static Dispatcher getDispatcher() {
         return dispatcher;
-    }
-
-    /**
-     * simple wrapper for {@link LogConfiguration#loggingIsEnabled()}
-     * as this is not NPE safe in JUnit mode
-     *
-     * @return
-     */
-    public static boolean canLog() {
-        try{
-            if (LogConfiguration.loggingIsEnabled()) {
-                return true;
-            }
-        } catch(Exception ignored) {
-        }
-        return false;
     }
 }

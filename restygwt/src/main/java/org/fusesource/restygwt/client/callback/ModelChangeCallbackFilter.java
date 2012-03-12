@@ -63,7 +63,7 @@ public class ModelChangeCallbackFilter implements CallbackFilter {
                 ModelChange.MODEL_CHANGED_DOMAIN_KEY);
 
         if (modelChangeIdentifier != null) {
-            if (Defaults.canLog()) {
+            if (GWT.isClient() && LogConfiguration.loggingIsEnabled()) {
                 Logger.getLogger(ModelChangeCallbackFilter.class.getName())
                         .fine("found modelChangeIdentifier \"" + modelChangeIdentifier
                                 + "\" in " + response);
@@ -76,14 +76,14 @@ public class ModelChangeCallbackFilter implements CallbackFilter {
                     GwtEvent<ModelChangedEventHandler> e = ModelChangeEventFactory.factory(
                             jsonArray.get(i).isString().stringValue());
 
-                    if (Defaults.canLog()) {
+                    if (GWT.isClient() && LogConfiguration.loggingIsEnabled()) {
                         Logger.getLogger(ModelChangeCallbackFilter.class.getName())
                                 .info("fire event \"" + e + "\" ...");
                     }
                     eventBus.fireEvent(e);
                 }
             } else {
-                if (Defaults.canLog()) {
+                if (GWT.isClient() && LogConfiguration.loggingIsEnabled()) {
                     Logger.getLogger(ModelChangeCallbackFilter.class.getName())
                             .info("found null array for model-change events");
                 }

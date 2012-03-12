@@ -73,13 +73,13 @@ public class CachingCallbackFilter implements CallbackFilter {
                 @Override
                 public void onResponseReceived(Request request, Response response) {
                     // call the original callback
-                    if (Defaults.canLog()) {
+                    if (GWT.isClient() && LogConfiguration.loggingIsEnabled()){
                         Logger.getLogger(CachingCallbackFilter.class.getName()).finer(
                                 "call original callback for " + ck);
                     }
                     originalCallback.onResponseReceived(request, response);
 
-                    if (Defaults.canLog()) {
+                    if (GWT.isClient() && LogConfiguration.loggingIsEnabled()) {
                         Logger.getLogger(CachingCallbackFilter.class.getName()).finer(
                                 "call " + removedCallbacks.size() + " more queued callbacks for "
                                         + ck);
@@ -93,20 +93,20 @@ public class CachingCallbackFilter implements CallbackFilter {
 
                 @Override
                 public void onError(Request request, Throwable exception) {
-                    if (Defaults.canLog()) {
+                    if (GWT.isClient() && LogConfiguration.loggingIsEnabled()) {
                         Logger.getLogger(CachingCallbackFilter.class.getName()).severe(
                                 "cannot call " + (removedCallbacks.size() + 1) + " callbacks for "
                                         + ck + " due to error: " + exception.getMessage());
                     }
                     // call the original callback
-                    if (Defaults.canLog()) {
+                    if (GWT.isClient() && LogConfiguration.loggingIsEnabled()){
                         Logger.getLogger(CachingCallbackFilter.class.getName()).finer(
                                 "call original callback for " + ck);
                     }
 
                     originalCallback.onError(request, exception);
 
-                    if (Defaults.canLog()) {
+                    if (GWT.isClient() && LogConfiguration.loggingIsEnabled()) {
                         Logger.getLogger(CachingCallbackFilter.class.getName()).finer(
                                 "call " + removedCallbacks.size() + " more queued callbacks for "
                                         + ck);
@@ -119,7 +119,7 @@ public class CachingCallbackFilter implements CallbackFilter {
                 }
             };
         } else {
-            if (Defaults.canLog()) {
+            if (GWT.isClient() && LogConfiguration.loggingIsEnabled()) {
                 Logger.getLogger(CachingCallbackFilter.class.getName()).finer(
                         "removed one or no " + "callback for cachekey " + ck);
             }
@@ -146,7 +146,7 @@ public class CachingCallbackFilter implements CallbackFilter {
             if (0 < definedTimeout) {
                 cache.putResult(ck, response, definedTimeout, getCacheDomains(method));
             } else {
-                if (Defaults.canLog()) {
+                if (GWT.isClient() && LogConfiguration.loggingIsEnabled()) {
                     Logger.getLogger(CachingCallbackFilter.class.getName()).fine(
                             "configured caching timeout of: " + definedTimeout
                                     + " - will ignore caching");

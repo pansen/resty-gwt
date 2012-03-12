@@ -133,7 +133,7 @@ public class QueuableRuntimeCacheStorage implements ScopableQueueableCacheStorag
 
     public void removeResult(CacheKey key, final String scope) {
         try {
-            if (Defaults.canLog()) {
+            if (GWT.isClient() && LogConfiguration.loggingIsEnabled()){
                 String s = scope;
 
                 if (null == scope) {
@@ -162,7 +162,7 @@ public class QueuableRuntimeCacheStorage implements ScopableQueueableCacheStorag
 
             cache.remove(key);
         } catch (Exception ex) {
-            if (Defaults.canLog()) {
+            if (GWT.isClient() && LogConfiguration.loggingIsEnabled()) {
                 Logger.getLogger(QueuableRuntimeCacheStorage.class.getName()).severe(
                         ex.getMessage());
             }
@@ -194,12 +194,12 @@ public class QueuableRuntimeCacheStorage implements ScopableQueueableCacheStorag
      */
     @Override
     public void purge() {
-        if (Defaults.canLog()) {
+        if (GWT.isClient() && LogConfiguration.loggingIsEnabled()) {
             Logger.getLogger(QueuableRuntimeCacheStorage.class.getName()).finer(
                     "will remove " + cache.size() + " elements from cache.");
         }
         cache.clear();
-        if (Defaults.canLog()) {
+        if (GWT.isClient() && LogConfiguration.loggingIsEnabled()) {
             Logger.getLogger(QueuableRuntimeCacheStorage.class.getName()).finer(
                     "remove " + timers.size() + " timers from list.");
         }
@@ -219,14 +219,14 @@ public class QueuableRuntimeCacheStorage implements ScopableQueueableCacheStorag
         if (null != currentScope) {
             List<CacheKey> tmpScope = new ArrayList<CacheKey>();
 
-            if (Defaults.canLog()) {
+            if (GWT.isClient() && LogConfiguration.loggingIsEnabled()){
                 Logger.getLogger(QueuableRuntimeCacheStorage.class.getName()).fine(
                         "will remove " + currentScope.size() + " elements from cache, scope: "
                                 + scope);
             }
 
             for (CacheKey k : currentScope) {
-                if (Defaults.canLog()) {
+                if (GWT.isClient() && LogConfiguration.loggingIsEnabled()) {
                     Logger.getLogger(QueuableRuntimeCacheStorage.class.getName()).finer(
                             "remove " + k + " from cache.");
                 }
@@ -238,7 +238,7 @@ public class QueuableRuntimeCacheStorage implements ScopableQueueableCacheStorag
             return;
         }
 
-        if (Defaults.canLog()) {
+        if (GWT.isClient() && LogConfiguration.loggingIsEnabled()) {
             Logger.getLogger(QueuableRuntimeCacheStorage.class.getName()).fine(
                     "nothing to be removed for scope " + scope);
         }

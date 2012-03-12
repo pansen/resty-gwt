@@ -75,7 +75,7 @@ public class FilterawareRetryingCallback implements FilterawareRequestCallback {
     public final void onResponseReceived(Request request, Response response) {
         for (CallbackFilter f : callbackFilters) {
             if (f.canHandle(method.builder.getHTTPMethod(), response.getStatusCode())) {
-                if (Defaults.canLog()) {
+                if (GWT.isClient() && LogConfiguration.loggingIsEnabled()) {
                     Logger.getLogger(FilterawareRetryingCallback.class.getName()).finest(
                             "apply filter " + f.getClass() + " to " + method);
                 }

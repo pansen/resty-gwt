@@ -47,7 +47,7 @@ public class FilterawareRequestCallbackImpl implements FilterawareRequestCallbac
     public final void onResponseReceived(Request request, Response response) {
         for (CallbackFilter f : callbackFilters) {
             if (f.canHandle(method.builder.getHTTPMethod(), response.getStatusCode())) {
-                if (Defaults.canLog()) {
+                if (GWT.isClient() && LogConfiguration.loggingIsEnabled()) {
                     Logger.getLogger(FilterawareRequestCallbackImpl.class.getName()).finest(
                             "apply filter " + f.getClass() + " to " + method);
                 }
