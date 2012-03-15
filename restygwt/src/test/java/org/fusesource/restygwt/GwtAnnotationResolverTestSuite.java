@@ -21,11 +21,11 @@ package org.fusesource.restygwt;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
+import org.fusesource.restygwt.client.cors.CORSAnnotationResolverTestGwt;
 import org.fusesource.restygwt.client.event.ModelChangeAnnotationTestGwt;
 import org.fusesource.restygwt.rebind.AnnotationResolver;
 
 import com.google.gwt.junit.tools.GWTTestSuite;
-
 
 /**
  * separate testsuite for tests where {@link AnnotationResolver}s are added to restygwt
@@ -34,15 +34,16 @@ import com.google.gwt.junit.tools.GWTTestSuite;
  */
 public class GwtAnnotationResolverTestSuite extends TestCase {
 
-
     /**
      * @return the suite of that module
      */
     public static Test suite() {
-        GWTTestSuite suite = new GWTTestSuite("AnnotationResolver GwtTestCases" );
+        GWTTestSuite suite = new GWTTestSuite("AnnotationResolver GwtTestCases");
 
         suite.addTestSuite(ModelChangeAnnotationTestGwt.class);
+        suite.addTestSuite(CORSAnnotationResolverTestGwt.class);
 
         return suite;
     }
+
 }
