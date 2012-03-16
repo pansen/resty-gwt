@@ -78,14 +78,14 @@ public class CORSAnnotationResolver implements AnnotationResolver {
 
             // if no value is set ... assign the default one
             if (protocolValue == null) {
-                results.put(CORS.PROTOCOL, new String[] {CORS.PROTOCOL_DEFAULT});
+                results.put(CORS.PROTOCOL, new String[] {""});
             } else {
                 results.put(CORS.PROTOCOL, new String[] {protocolValue});
             }
 
             // if no value is set ... assign the default one
             if (portValue == null) {
-                results.put(CORS.PORT, new String[] {CORS.PORT_DEFAULT});
+                results.put(CORS.PORT, new String[] {""});
             } else {
                 results.put(CORS.PORT, new String[] {portValue});
             }

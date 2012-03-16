@@ -55,7 +55,7 @@ public class CORSAnnotationResolverTestGwt extends GWTTestCase {
             public void onSuccess(Method method, Void response) {
                 assertEquals("[\"api.host.com\"]", method.getData().get(CORS.DOMAIN));
                 assertEquals("[\"https\"]", method.getData().get(CORS.PROTOCOL));
-                assertEquals("[\"80\"]", method.getData().get(CORS.PORT));
+                assertEquals("[\"\"]", method.getData().get(CORS.PORT));
                 finishTest();
             }
 
@@ -88,7 +88,7 @@ public class CORSAnnotationResolverTestGwt extends GWTTestCase {
             public void onSuccess(Method method, Void response) {
                 assertEquals("[\"api.host.com\"]", method.getData().get(CORS.DOMAIN));
                 assertEquals("[\"https\"]", method.getData().get(CORS.PROTOCOL));
-                assertEquals("[\"80\"]", method.getData().get(CORS.PORT));
+                assertEquals("[\"\"]", method.getData().get(CORS.PORT));
                 finishTest();
             }
 
@@ -121,7 +121,7 @@ public class CORSAnnotationResolverTestGwt extends GWTTestCase {
             public void onSuccess(Method method, Void response) {
                 assertEquals("[\"api.host.com\"]", method.getData().get(CORS.DOMAIN));
                 assertEquals("[\"https\"]", method.getData().get(CORS.PROTOCOL));
-                assertEquals("[\"80\"]", method.getData().get(CORS.PORT));
+                assertEquals("[\"\"]", method.getData().get(CORS.PORT));
                 finishTest();
             }
 
@@ -154,7 +154,7 @@ public class CORSAnnotationResolverTestGwt extends GWTTestCase {
             public void onSuccess(Method method, Void response) {
                 assertEquals("[\"api2.host.com\"]", method.getData().get(CORS.DOMAIN));
                 assertEquals("[\"spdy\"]", method.getData().get(CORS.PROTOCOL));
-                assertEquals("[\"80\"]", method.getData().get(CORS.PORT));
+                assertEquals("[\"\"]", method.getData().get(CORS.PORT));
                 finishTest();
             }
 
@@ -219,9 +219,7 @@ public class CORSAnnotationResolverTestGwt extends GWTTestCase {
             @Override
             public void onSuccess(Method method, Void response) {
                 assertEquals("[\"api2.host.com\"]", method.getData().get(CORS.DOMAIN));
-                // since the protocol defaults to "http" and there is no way to check if a annotation element is present:
-                // this has to be http, because a CORS annotation is present not setting the protocol element
-                assertEquals("[\"http\"]", method.getData().get(CORS.PROTOCOL));
+                assertEquals("[\"https\"]", method.getData().get(CORS.PROTOCOL));
                 assertEquals("[\"12345\"]", method.getData().get(CORS.PORT));
                 finishTest();
             }

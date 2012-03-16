@@ -36,20 +36,18 @@ import java.lang.annotation.Target;
 public @interface CORS {
 
     public static final String PROTOCOL = "cors_protocol";
-    public static final String PROTOCOL_DEFAULT = "http";
     public static final String PORT = "cors_port";
-    public static final String PORT_DEFAULT = "80";
     public static final String DOMAIN = "cors_domain";
 
     /**
-     * The port, defaults to {@value #PORT_DEFAULT}.
+     * The port, defaults to an empty string.
      */
-    String port() default PORT_DEFAULT;
+    String port() default "";
 
     /**
-     * The protocol, defaults to {@value #PROTOCOL_DEFAULT}.
+     * The protocol, defaults to an empty string.
      */
-    String protocol() default PROTOCOL_DEFAULT;
+    String protocol() default "";
 
     /**
      * The domain you want to access.
