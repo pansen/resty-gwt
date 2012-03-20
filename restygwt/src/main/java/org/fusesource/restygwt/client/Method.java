@@ -2,13 +2,13 @@
  * Copyright (C) 2009-2010 the original author or authors.
  * See the notice.md file distributed with this work for additional
  * information regarding copyright ownership.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -40,7 +40,7 @@ import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.XMLParser;
 
 /**
- * 
+ *
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
 public class Method {
@@ -48,23 +48,43 @@ public class Method {
     /**
      * GWT hides the full spectrum of methods because safari has a bug:
      * http://bugs.webkit.org/show_bug.cgi?id=3812
-     * 
+     *
      * We extend assume the server side will also check the
      * X-HTTP-Method-Override header.
-     * 
+     *
      * TODO: add an option to support using this approach to bypass restrictive
      * firewalls even if the browser does support the setting all the method
      * types.
-     * 
+     *
      * @author chirino
      */
-    static private class MethodRequestBuilder extends RequestBuilder {
+    public static class MethodRequestBuilder extends RequestBuilder {
+
+        /**
+         * Contains a copy of the headers only to make them accessible from outside.
+         */
+        protected Map<String, String> duplicatedHeaders = new HashMap<String, String>();
+
         public MethodRequestBuilder(String method, String url) {
 
             super(method, url);
 
             setHeader("X-HTTP-Method-Override", method);
         }
+
+        @Override
+        public void setHeader(String header, String value) {
+            super.setHeader(header, value);
+            duplicatedHeaders.put(header, value);
+        }
+
+        /**
+         * Gets you the copy of the headers. Modifying this map wouldn't affect any request data.
+         */
+        public Map<String, String> getHeaders() {
+            return duplicatedHeaders;
+        }
+
     }
 
     public RequestBuilder builder;
@@ -299,7 +319,7 @@ public class Method {
     /**
      * add some information onto the method which could be interesting when this method
      * comes back to the dispatcher.
-     * 
+     *
      * @param key
      * @param value
      */
@@ -309,7 +329,7 @@ public class Method {
 
     /**
      * get all data fields which was previously added
-     * 
+     *
      * @return
      */
     public Map<String, String> getData() {
