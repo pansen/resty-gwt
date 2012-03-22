@@ -38,6 +38,13 @@ public @interface CORS {
     public static final String PROTOCOL = "cors_protocol";
     public static final String PORT = "cors_port";
     public static final String DOMAIN = "cors_domain";
+    public static final String ACCESS_POINT = "cors_access_point";
+    public static final String ACCESS_POINT_DEFAULT = "defaultAccess";
+
+    /**
+     * The name of the html file, that serves as access-point, defaults to {@value #ACCESS_POINT_DEFAULT}.
+     */
+    String accessPoint() default ACCESS_POINT_DEFAULT;
 
     /**
      * The port, defaults to an empty string.

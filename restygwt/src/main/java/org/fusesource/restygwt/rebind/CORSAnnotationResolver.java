@@ -45,6 +45,7 @@ public class CORSAnnotationResolver implements AnnotationResolver {
         Map<String, String[]> results = new HashMap<String, String[]>();
         String protocolValue = null;
         String portValue = null;
+        String accessPointValue = null;
 
         // only do something if a CORS annotation is present
         if (methodAnnotation != null || classAnnotation != null) {
@@ -60,6 +61,9 @@ public class CORSAnnotationResolver implements AnnotationResolver {
                 if (!isNullOrEmpty(classAnnotation.port())) {
                     portValue = classAnnotation.port();
                 }
+                if (!isNullOrEmpty(classAnnotation.accessPoint())) {
+                    accessPointValue = classAnnotation.accessPoint();
+                }
             }
 
             // if there is a method level annotation ...
@@ -73,6 +77,9 @@ public class CORSAnnotationResolver implements AnnotationResolver {
                 }
                 if (!isNullOrEmpty(methodAnnotation.port())) {
                     portValue = methodAnnotation.port();
+                }
+                if (!isNullOrEmpty(methodAnnotation.accessPoint())) {
+                    accessPointValue = methodAnnotation.accessPoint();
                 }
             }
 
@@ -88,6 +95,13 @@ public class CORSAnnotationResolver implements AnnotationResolver {
                 results.put(CORS.PORT, new String[] {""});
             } else {
                 results.put(CORS.PORT, new String[] {portValue});
+            }
+
+            // if no value is set ... assign the default one
+            if (accessPointValue == null) {
+                results.put(CORS.ACCESS_POINT, new String[] {""});
+            } else {
+                results.put(CORS.ACCESS_POINT, new String[] {accessPointValue});
             }
         }
 
