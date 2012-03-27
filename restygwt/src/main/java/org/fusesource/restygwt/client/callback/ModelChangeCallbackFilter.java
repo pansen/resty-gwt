@@ -20,12 +20,12 @@ package org.fusesource.restygwt.client.callback;
 
 import java.util.logging.Logger;
 
-import org.fusesource.restygwt.client.Defaults;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.ModelChange;
 import org.fusesource.restygwt.example.client.event.ModelChangeEventFactory;
 import org.fusesource.restygwt.example.client.event.ModelChangedEventHandler;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.http.client.RequestCallback;
@@ -33,6 +33,7 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
+import com.google.gwt.logging.client.LogConfiguration;
 
 public class ModelChangeCallbackFilter implements CallbackFilter {
 

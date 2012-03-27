@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2009-2010 the original author or authors. See the notice.md file distributed with
  * this work for additional information regarding copyright ownership.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied. See the License for the specific language governing permissions and limitations under
@@ -21,11 +21,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import org.fusesource.restygwt.client.Defaults;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.Timer;
 
 public class QueuableRuntimeCacheStorage implements ScopableQueueableCacheStorage {
@@ -37,7 +36,7 @@ public class QueuableRuntimeCacheStorage implements ScopableQueueableCacheStorag
 
     /**
      * key <> value hashmap for holding cache values. nothing special here.
-     * 
+     *
      * invalidated values will be dropped by timer
      */
     protected final Map<CacheKey, Response> cache = new HashMap<CacheKey, Response>();
@@ -98,7 +97,7 @@ public class QueuableRuntimeCacheStorage implements ScopableQueueableCacheStorag
 
     /**
      * put a result to one or many scopes
-     * 
+     *
      * e.g. <code>
      *      putResult("foo_key", "bar_result", {"UserDto", "ProfileDto"}) {
      * </code>
@@ -133,7 +132,7 @@ public class QueuableRuntimeCacheStorage implements ScopableQueueableCacheStorag
 
     public void removeResult(CacheKey key, final String scope) {
         try {
-            if (GWT.isClient() && LogConfiguration.loggingIsEnabled()){
+            if (GWT.isClient() && LogConfiguration.loggingIsEnabled()) {
                 String s = scope;
 
                 if (null == scope) {
@@ -219,7 +218,7 @@ public class QueuableRuntimeCacheStorage implements ScopableQueueableCacheStorag
         if (null != currentScope) {
             List<CacheKey> tmpScope = new ArrayList<CacheKey>();
 
-            if (GWT.isClient() && LogConfiguration.loggingIsEnabled()){
+            if (GWT.isClient() && LogConfiguration.loggingIsEnabled()) {
                 Logger.getLogger(QueuableRuntimeCacheStorage.class.getName()).fine(
                         "will remove " + currentScope.size() + " elements from cache, scope: "
                                 + scope);
@@ -246,7 +245,7 @@ public class QueuableRuntimeCacheStorage implements ScopableQueueableCacheStorag
 
     /**
      * helper method to access a scope
-     * 
+     *
      * @param scope
      * @return
      */
