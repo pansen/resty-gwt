@@ -47,7 +47,10 @@
 
     <extend-configuration-property name="org.fusesource.restygwt.annotationresolver"
             value="org.fusesource.restygwt.rebind.ModelChangeAnnotationResolver"/>
+    <extend-configuration-property name="org.fusesource.restygwt.annotationresolver"
+            value="org.fusesource.restygwt.rebind.CORSAnnotationResolver"/>
 
+    <servlet path='/my/*' class='org.fusesource.restygwt.server.event.EchoServlet' />
     <servlet path='/foo/*' class='org.fusesource.restygwt.server.event.EchoServlet' />
     <servlet path='/responseInterceptorDto/*' class='org.fusesource.restygwt.server.event.EchoServlet' />
 
