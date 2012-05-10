@@ -56,7 +56,6 @@ public class CORSAnnotationResolverTestGwt extends GWTTestCase {
                 assertEquals("[\"api.host.com\"]", method.getData().get(CORS.DOMAIN));
                 assertEquals("[\"https\"]", method.getData().get(CORS.PROTOCOL));
                 assertEquals("[\"\"]", method.getData().get(CORS.PORT));
-                assertEquals("[\"defaultAccess\"]", method.getData().get(CORS.ACCESS_POINT));
                 finishTest();
             }
 
@@ -90,7 +89,6 @@ public class CORSAnnotationResolverTestGwt extends GWTTestCase {
                 assertEquals("[\"api.host.com\"]", method.getData().get(CORS.DOMAIN));
                 assertEquals("[\"https\"]", method.getData().get(CORS.PROTOCOL));
                 assertEquals("[\"\"]", method.getData().get(CORS.PORT));
-                assertEquals("[\"defaultAccess\"]", method.getData().get(CORS.ACCESS_POINT));
                 finishTest();
             }
 
@@ -124,7 +122,6 @@ public class CORSAnnotationResolverTestGwt extends GWTTestCase {
                 assertEquals("[\"api.host.com\"]", method.getData().get(CORS.DOMAIN));
                 assertEquals("[\"https\"]", method.getData().get(CORS.PROTOCOL));
                 assertEquals("[\"\"]", method.getData().get(CORS.PORT));
-                assertEquals("[\"defaultAccess\"]", method.getData().get(CORS.ACCESS_POINT));
                 finishTest();
             }
 
@@ -158,7 +155,6 @@ public class CORSAnnotationResolverTestGwt extends GWTTestCase {
                 assertEquals("[\"api2.host.com\"]", method.getData().get(CORS.DOMAIN));
                 assertEquals("[\"spdy\"]", method.getData().get(CORS.PROTOCOL));
                 assertEquals("[\"\"]", method.getData().get(CORS.PORT));
-                assertEquals("[\"defaultAccess\"]", method.getData().get(CORS.ACCESS_POINT));
                 finishTest();
             }
 
@@ -192,7 +188,6 @@ public class CORSAnnotationResolverTestGwt extends GWTTestCase {
                 assertEquals("[\"api.host.com\"]", method.getData().get(CORS.DOMAIN));
                 assertEquals("[\"https\"]", method.getData().get(CORS.PROTOCOL));
                 assertEquals("[\"8080\"]", method.getData().get(CORS.PORT));
-                assertEquals("[\"defaultAccess\"]", method.getData().get(CORS.ACCESS_POINT));
                 finishTest();
             }
 
@@ -226,7 +221,6 @@ public class CORSAnnotationResolverTestGwt extends GWTTestCase {
                 assertEquals("[\"api2.host.com\"]", method.getData().get(CORS.DOMAIN));
                 assertEquals("[\"https\"]", method.getData().get(CORS.PROTOCOL));
                 assertEquals("[\"12345\"]", method.getData().get(CORS.PORT));
-                assertEquals("[\"defaultAccess\"]", method.getData().get(CORS.ACCESS_POINT));
                 finishTest();
             }
 
